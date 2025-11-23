@@ -100,8 +100,14 @@ int TicTacToeUI::writeTicTacToeBoard(TicTacToeBoard board) const {
             if (c < TicTacToeBoard::BOARD_NUM_COLS - 1)
                 cout << " |";
         }
-        if (r < TicTacToeBoard::BOARD_NUM_ROWS - 1)
-            cout << "\n\t\t\t\t------------\n";
+        if (r < TicTacToeBoard::BOARD_NUM_ROWS - 1) {  // draw the row dividers
+            cout << "\n\t\t\t\t";
+            for (int itr = 0; itr < TicTacToeBoard::BOARD_NUM_COLS; itr++) {
+                cout << "---";  // print three - for every column, so we aren't hardcoding the columns
+            }
+            cout << "---\n";
+        }
+
         else
             cout << "\n\n";
     }
