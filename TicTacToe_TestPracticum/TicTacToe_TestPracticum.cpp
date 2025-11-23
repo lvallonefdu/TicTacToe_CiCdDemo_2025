@@ -85,7 +85,9 @@ int main()
         // Wasn't a command - check if row & column entered
         //   must be two unsigned integers between 0 & 2 (ToDo BAD - use board class constants)
         num_args = sscanf_s(userInput.c_str(), "%u %u", &row, &col);
-        if ((num_args != 2) || (row > 2) || (col > 2)) {
+        if ((num_args != 2) || 
+              (row > TicTacToeBoard::BOARD_NUM_ROWS) || 
+              (col > TicTacToeBoard::BOARD_NUM_COLS)) {
             console.writeOutput(INVALID_COMMAND, true);
             continue;
         }
