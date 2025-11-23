@@ -101,6 +101,16 @@ TicTacToeBoard::Player TicTacToeBoard::nextPlayer() {
 	return player;
 }
 
+// Return true if game is a Draw - all squares filled and no one has won
+bool TicTacToeBoard::isDraw() const {
+	if ((takenSquareCount >= BOARD_NUM_ROWS * BOARD_NUM_COLS) &&
+		!this->isWinner(X) && !this->isWinner(O)) {
+		return true;
+	}
+	else
+		return false;
+}
+
 // Return true if specified player has won the game
 //   Legacy version - exhaustive check - cell by cell
 bool TicTacToeBoard::isWinner(Player playerToCheck) const {
@@ -137,15 +147,7 @@ bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 	return false;              // no winner this time
 }
 
-// Return true if game is a Draw - all squares filled and no one has won
-bool TicTacToeBoard::isDraw() const {
-	if ((takenSquareCount >= BOARD_NUM_ROWS * BOARD_NUM_COLS) &&
-		!this->isWinner(X) && !this->isWinner(O)) {
-		return true;
-	}
-	else
-		return false;
-}
+
 
 //                      Set based refactoring
 // the following set based code is based on LV's python design that implemented set based win checks
@@ -180,8 +182,19 @@ bool TicTacToeBoard::matchesWinningPattern(Player p) const {
 	return false;   // no winner yet
 }
 
+//                                     ***  Board class Helper functions ***
+//       pattern matching position computation               mapping enums to player character           validating arguments
 
 
+// helper function to compute position from row & column
+// for a 3x3 board - position numbering is row 0 -> 0, 1, 2 .... row 2 -> 6, 7, 8
+int TicTacToeBoard::rowColToPosition(int row, int column) {
+	if ((row >= BOARD_NUM_ROWS) || (column >= BOARD_NUM_COLS) ||
+		(row < 0) || (column < 0)) {
+		throw std::invalid_argument("Invalid row or column passed to getSquareContents\n");
+	}
+	return row * BOARD_NUM_COLS + column;
+}
 
 // map enum to character for displaying player name
 char TicTacToeBoard::playerMap(Player playerEnum) const {
@@ -204,14 +217,4 @@ void TicTacToeBoard::validateRowsAndColumns(int row, int column) const {
 		std::string errorMessage = "Exception thrown: invalid row or column.  row: " + std::to_string(row) + "  column: " + std::to_string(column) + "\n";
 		throw std::invalid_argument(errorMessage);
 	}
-}
-
-// helper function to compute position from row & column
-// for a 3x3 board - position numbering is row 0 -> 0, 1, 2 .... row 2 -> 6, 7, 8
-int TicTacToeBoard::rowColToPosition(int row, int column) {
-	if ((row >= BOARD_NUM_ROWS) || (column >= BOARD_NUM_COLS) ||
-		(row < 0) || (column < 0)) {
-		throw std::invalid_argument("Invalid row or column passed to getSquareContents\n");
-	}
-	return row * BOARD_NUM_COLS + column;
 }
