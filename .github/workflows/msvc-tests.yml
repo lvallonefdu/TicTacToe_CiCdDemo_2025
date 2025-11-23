@@ -1,36 +1,67 @@
-name: Build & Test (VS 2022)
+name: Build and Test TicTacToe
 
 on:
+  # push:
+    # branches: ['**']
   pull_request:
+    branches: ['**']
 
 jobs:
   build-and-test:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Setup MSVC
-      uses: ilammy/msvc-dev-cmd@v1
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1
 
-    - name: Build solution
-      run: msbuild TicTacToe2023.sln /p:Configuration=Debug /m
+      # - name: Restore NuGet packages (not needed)
+      #   run: nuget restore TicTacToe_Fall2023.sln
 
-    - name: Run native C++ tests
-      shell: pwsh
-      run: |
-        # Find vstest.console.exe (Enterprise or Professional)
-        $vstest = Get-ChildItem -Recurse "C:\Program Files (x86)\Microsoft Visual Studio\" -Filter vstest.console.exe | Select-Object -First 1
-        if (-not $vstest) {
-          throw "Could not find vstest.console.exe!"
-        }
+      - name: Build solution
+        run: msbuild TicTacToe_Fall2023.sln /p:Configuration=Debug /m
 
-        # Find the compiled test DLL (x86/x64, Debug/Release)
-        $dll = Get-ChildItem -Recurse -Filter TicTacToeTest.dll | Select-Object -First 1
-        if (-not $dll) {
-          throw "Test DLL not found! Did the project build succeed?"
-        }
+        # Locate and upload the executable
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: TicTacToe-Executable
+          path: |
+            **/TicTacToe.exe
+            **/Debug/*.exe
+            **/Release/*.exe
 
-        Write-Host "Running tests from $($dll.FullName)"
-        & "$($vstest.FullName)" "$($dll.FullName)"
+      # alternative upload approach to just upload a release version (note: release version has other issues)
+      # - name: Upload Release executable
+      #  uses: actions/upload-artifact@v4
+      #  with:
+      #    name: TicTacToe-Release
+      #    path: TicTacToe_Fall2023\x64\Release\*.exe
 
+      - name: Run native C++ tests and show failed cases
+        shell: pwsh
+        run: |
+          $dll = Get-ChildItem -Recurse -Filter TicTacToeTest.dll | Select-Object -First 1
+          if (-not $dll) { throw "Test DLL not found! Did the project build succeed?" }
+      
+          $vstestPath = "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\TestWindow\vstest.console.exe"
+      
+          Write-Host "Running tests from $($dll.FullName)`n"
+      
+          # Run tests and capture output
+          $output = & "$vstestPath" "$($dll.FullName)" /logger:console /TestAdapterPath:"$env:GITHUB_WORKSPACE" 2>&1
+      
+          # Print full output for context
+          Write-Host $output
+      
+          # Extract failed test cases
+          $failed = $output | Select-String -Pattern 'Failed' 
+          if ($failed) {
+              Write-Host "`n========== FAILED TEST CASES ==========" -ForegroundColor Red
+              $failed | ForEach-Object { Write-Host $_.Line -ForegroundColor Red }
+              throw "Some tests failed"
+          } else {
+              Write-Host "`nAll tests passed! ✅" -ForegroundColor Green
+          }
