@@ -184,13 +184,12 @@ bool TicTacToeBoard::matchesWinningPattern(Player p) const {
 	return false;   // no winner yet
 }
 
-
-// pattern matching helper function to compute position from row & column
-// for a 3x3 board - position numbering is row 0 -> 0, 1, 2 .... row 2 -> 6, 7, 8
-int TicTacToeBoard::rowColToPosition(int row, int column) {
-	if ((row >= BOARD_NUM_ROWS) || (column >= BOARD_NUM_COLS) ||
-		(row < 0) || (column < 0)) {
-		throw std::invalid_argument("Invalid row or column passed to getSquareContents\n");
+// Return true if game is a Draw - all squares filled and no one has won
+//   intentional defect added
+bool TicTacToeBoard::isDraw() const {
+	if ((takenSquareCount > BOARD_NUM_ROWS * BOARD_NUM_COLS) && 
+		!this->isWinner(X) && !this->isWinner(O)) {
+		return true;
 	}
 	return row * BOARD_NUM_COLS + column;
 }
