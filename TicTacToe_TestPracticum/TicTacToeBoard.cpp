@@ -115,7 +115,7 @@ bool TicTacToeBoard::isDraw() const {
 //   Legacy version - exhaustive check - cell by cell
 bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 
-	matchesWinningPattern(playerToCheck);   // set based refactor
+	// matchesWinningPattern(playerToCheck);   // set based refactor
 	
 	// check rows
 	for (int r = 0; r < BOARD_NUM_ROWS; r++) {
@@ -213,6 +213,5 @@ void TicTacToeBoard::validateRowsAndColumns(int row, int column) const {
 	if ((row >= BOARD_NUM_ROWS) || (column >= BOARD_NUM_COLS) ||
 		(row < 0) || (column < 0)) {
 		std::string errorMessage = "Exception thrown: invalid row or column.  row: " + std::to_string(row) + "  column: " + std::to_string(column) + "\n";
-		throw std::invalid_argument(errorMessage);
 	}
 }
