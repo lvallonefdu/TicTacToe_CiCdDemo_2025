@@ -115,7 +115,7 @@ bool TicTacToeBoard::isDraw() const {
 //   Legacy version - exhaustive check - cell by cell
 bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 
-	// return (matchesWinningPattern(playerToCheck));   // set based refactor
+	return (matchesWinningPattern(playerToCheck));   // set based refactor
 	
 	// check rows
 	for (int r = 0; r < BOARD_NUM_ROWS; r++) {
