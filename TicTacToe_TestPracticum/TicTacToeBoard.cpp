@@ -117,10 +117,10 @@ bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 
 	// return (matchesWinningPattern(playerToCheck));   // set based refactor
 	
-	// check rows
+	// check rows - broken
 	for (int r = 0; r < BOARD_NUM_ROWS; r++) {
 		if ((board[r][0] == playerToCheck) &&
-			(board[r][1] == playerToCheck) &&
+			//(board[r][1] == playerToCheck) &&
 			(board[r][2] == playerToCheck))
 			return true;
 	}
