@@ -39,8 +39,8 @@ public:
 	enum Player { X, O, EMPTY };    // define player enums, map to display character, ToDo: use "class" for type safety
 
 	// define some constants for public consumption, note initial player defined here in the Board class
-	static constexpr int BOARD_NUM_ROWS = 3;
-	static constexpr int BOARD_NUM_COLS = 3;
+	static constexpr int BOARD_NUM_ROWS = 4;
+	static constexpr int BOARD_NUM_COLS = 4;
 	static constexpr Player INITIAL_PLAYER = Player::X;
 
 
