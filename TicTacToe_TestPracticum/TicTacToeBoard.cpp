@@ -121,7 +121,7 @@ bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 	for (int r = 0; r < BOARD_NUM_ROWS; r++) {
 		if ((board[r][0] == playerToCheck) &&
 			(board[r][1] == playerToCheck) &&
-			(board[r][2] == playerToCheck))
+			(board[r][3] == playerToCheck)) 
 			return true;
 	}
 
