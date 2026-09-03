@@ -115,13 +115,13 @@ bool TicTacToeBoard::isDraw() const {
 //   Legacy version - exhaustive check - cell by cell
 bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 
-	// return (matchesWinningPattern(playerToCheck));   // set based refactor
+	return (matchesWinningPattern(playerToCheck));   // set based refactor
 	
 	// check rows
 	for (int r = 0; r < BOARD_NUM_ROWS; r++) {
 		if ((board[r][0] == playerToCheck) &&
 			(board[r][1] == playerToCheck) &&
-			(board[r][2] == playerToCheck))
+			(board[r][2] == playerToCheck)) 
 			return true;
 	}
 
@@ -160,10 +160,11 @@ bool TicTacToeBoard::isWinner(Player playerToCheck) const {
 // for example - X has moved {(0,0), (1,0), (1,1), (2,0)}  winning pattern (0,0), (1,0), (2,0) is a subset, X wins
 //   To add a new winning pattern - update the array size (e.g. 8->9) & add the pattern to the set below ,{{x,y,z}}
 
-static constexpr  std::array<std::array<int, 3>, 8> winPatterns{ {
+static constexpr  std::array<std::array<int, 3>, 9> winPatterns{ {
 	{{0,1,2}}, {{3, 4, 5}}, {{6,7,8}},    // rows
 	{{0,3,6}}, {{1, 4, 7}}, {{2,5,8}},    // columns
-	{{0,4,8}}, {{2,4,6}}                 // diagonals
+	{{0,4,8}}, {{2,4,6}},                 // diagonals
+	{{3,7,5}}
 } };
 
 bool TicTacToeBoard::matchesWinningPattern(Player p) const {
